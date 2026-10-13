@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Perhitungan Gaji Karyawan</title>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --primary-slate: #0f172a;
+            --card-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --emerald-accent: #059669;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 24px;
+        }
+
+        .header-banner {
+            text-align: center;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 28px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-bottom: 4px solid var(--emerald-accent);
+        }
+
+        .header-banner h1 {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .header-banner p {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .layout-container {
+            display: flex;
+            gap: 24px;
+            max-width: 1350px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .section-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        .kolom-kiri { flex: 1.1; text-align: center; }
+        .kolom-kanan { flex: 0.9; }
+
+        .title-section {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-slate);
+            border-bottom: 2px solid var(--emerald-accent);
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        /* Penampung Khusus Gambar Flowchart dengan Latar Belakang Hitam */
+        .flowchart-container-img {
+            background-color: #000000;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .flowchart-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Form & Simulasi */
+        .form-field { margin-bottom: 14px; text-align: left; }
+        .form-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .form-field select, .form-field input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            background-color: #f8fafc;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .btn-execute {
+            background-color: var(--emerald-accent);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn-reset {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .table-result {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .table-result th, .table-result td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table-result th { background-color: #f1f5f9; color: var(--primary-slate); }
+        .table-result .row-total {
+            background-color: #ecfdf5;
+            font-weight: bold;
+            color: var(--emerald-accent);
+        }
+
+        .code-container {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .rangkuman-container {
+            max-width: 1350px;
+            margin: 24px auto 0 auto;
+        }
+        .rangkuman-container h3 {
+            font-size: 13px;
+            color: var(--primary-slate);
+            margin-top: 14px;
+            margin-bottom: 4px;
+        }
+        .rangkuman-container p, .rangkuman-container ol, .rangkuman-container ul {
+            font-size: 12px;
+            text-align: justify;
+            margin-left: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-banner">
+        <h1>Laporan Praktikum Algoritma dan Pemrograman</h1>
+        <p>Analisis Flowchart, Pseudocode, dan Simulasi Perhitungan Penghasilan Karyawan</p>
+    </header>
+
+    <div class="layout-container">
+        
+        <!-- KOLOM KIRI: TEMPAT GAMBAR FLOWCHART (LATAR BELAKANG HITAM) -->
+        <section class="section-card kolom-kiri">
+            <h2 class="title-section">I. Diagram Alir (Flowchart)</h2>
+            <div class="flowchart-container-img">
+                <img src="Gambar1.png" alt="Flowchart Perhitungan Gaji Karyawan" class="flowchart-img">
+            </div>
+        </section>
+
+        <!-- KOLOM KANAN: SIMULASI & PSEUDOCODE -->
+        <section class="section-card kolom-kanan">
+            <h2 class="title-section">II. Simulasi Perhitungan Penghasilan</h2>
+
+            <div class="form-field">
+                <label for="golongan">Pilih Golongan Karyawan:</label>
+                <select id="golongan">
+                    <option value="" disabled selected>-- Pilih Golongan --</option>
+                    <option value="A">Golongan A (Rp 5.000.000)</option>
+                    <option value="B">Golongan B (Rp 6.500.000)</option>
+                    <option value="C">Golongan C (Rp 9.500.000)</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="jamLembur">Jumlah Jam Lembur:</label>
+                <input type="number" id="jamLembur" placeholder="Contoh: 1" min="0">
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-execute" onclick="kalkulasiGaji()">Proses Perhitungan</button>
+                <button class="btn-reset" onclick="resetFormulir()">Reset Data</button>
+            </div>
+
+            <table class="table-result">
+                <thead>
+                    <tr><th colspan="2">Rincian Hasil Akhir</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Golongan Karyawan</td><td id="res-gol">-</td></tr>
+                    <tr><td>Gaji Pokok</td><td id="res-pokok">Rp 0</td></tr>
+                    <tr><td>Durasi Lembur</td><td id="res-jam">-</td></tr>
+                    <tr><td>Persentase Lembur</td><td id="res-persen">0%</td></tr>
+                    <tr><td>Nominal Gaji Lembur</td><td id="res-lembur">Rp 0</td></tr>
+                    <tr class="row-total"><td>Total Penghasilan</td><td id="res-total">Rp 0</td></tr>
+                </tbody>
+            </table>
+
+            <h2 class="title-section" style="margin-top: 20px;">III. Kode Semu (Pseudocode)</h2>
+            <div class="code-container">ALGORITMA HitungGajiKaryawan
+
+DEKLARASI
+    golongan : string
+    jamLembur : integer
+    gajiPokok, persentase : real
+    gajiLembur, totalPenghasilan : real
+
+DESKRIPSI
+    INPUT(golongan)
+    INPUT(jamLembur)
+
+    IF golongan = "A" THEN
+        gajiPokok = 5000000
+    ELSE IF golongan = "B" THEN
+        gajiPokok = 6500000
+    ELSE IF golongan = "C" THEN
+        gajiPokok = 9500000
+    ELSE
+        OUTPUT("Golongan tidak valid")
+        STOP
+    END IF
+
+    IF jamLembur < 0 THEN
+        OUTPUT("Jumlah jam lembur tidak valid")
+        STOP
+    ELSE IF jamLembur = 0 THEN
+        persentase = 0.00
+    ELSE IF jamLembur = 1 THEN
+        persentase = 0.30
+    ELSE IF jamLembur = 2 THEN
+        persentase = 0.32
+    ELSE IF jamLembur = 3 THEN
+        persentase = 0.34
+    ELSE IF jamLembur = 4 THEN
+        persentase = 0.36
+    ELSE
+        persentase = 0.38
+    END IF
+
+    gajiLembur = gajiPokok * persentase
+    totalPenghasilan = gajiPokok + gajiLembur
+
+    OUTPUT("Gaji Pokok = ", gajiPokok)
+    OUTPUT("Gaji Lembur = ", gajiLembur)
+    OUTPUT("Total Penghasilan = ", totalPenghasilan)
+
+STOP</div>
+        </section>
+
+    </div>
+
+    <!-- RANGKUMAN MATERI -->
+    <section class="section-card rangkuman-container">
+        <h2 class="title-section">IV. Rangkuman Materi Akademis</h2>
+
+        <h3>1. Algoritma dan Pemrograman Komputer</h3>
+        <p><strong>Algoritma</strong> adalah urutan langkah logis terstruktur untuk menyelesaikan masalah[cite: 1, 2]. Pemrograman adalah proses penerjemahan algoritma ke bahasa komputer[cite: 1, 2].</p>
+
+        <h3 style="font-size: 12px; color: var(--text-muted);">Daftar Pustaka Referensi:</h3>
+        <ol>
+            <li>Cormen, T. H., et al. (2022). <em>Introduction to Algorithms</em>. MIT Press[cite: 1].</li>
+            <li>Sedgewick, R., & Wayne, K. (2011). <em>Algorithms</em>. Addison-Wesley[cite: 1].</li>
+            <li>Munir, R. (2016). <em>Algoritma dan Pemrograman</em>. Informatika Bandung[cite: 1].</li>
+            <li>Schildt, H. (2018). <em>Java: The Complete Reference</em>. McGraw-Hill[cite: 1].</li>
+            <li>Pressman, R. S. (2019). <em>Software Engineering</em>. McGraw-Hill[cite: 1].</li>
+        </ol>
+
+        <h3>2. Sejarah dan Perkembangan Bahasa Pemrograman Java</h3>
+        <p>Java dikembangkan James Gosling di Sun Microsystems tahun 1991 (awal bernama Oak) dengan konsep *Write Once, Run Anywhere* (WORA). Diakuisisi Oracle Corporation tahun 2010.</p>
+
+        <h3 style="font-size: 12px; color: var(--text-muted);">Contoh Aplikasi Berbasis Java:</h3>
+        <ul>
+            <li><strong>Sistem Operasi Android:</strong> Sebagian besar aplikasi Android menggunakan JVM dan Java.</li>
+            <li><strong>Minecraft (Java Edition):</strong> Game populer yang dibangun sepenuhnya dengan Java.</li>
+        </ul>
+    </section>
+
+    <script>
+        function kalkulasiGaji() {
+            var gol = document.getElementById("golongan").value;
+            var jamInput = document.getElementById("jamLembur").value;
+
+            if (!gol) {
+                alert("Silakan pilih Golongan Karyawan terlebih dahulu.");
+                return;
+            }
+            if (jamInput === "" || jamInput < 0) {
+                alert("Silakan masukkan jam lembur yang valid.");
+                return;
+            }
+
+            var jam = parseInt(jamInput);
+            var gajiPokok = 0;
+            var persentase = 0;
+
+            if (gol === "A") { gajiPokok = 5000000; }
+            else if (gol === "B") { gajiPokok = 6500000; }
+            else if (gol === "C") { gajiPokok = 9500000; }
+
+            if (jam === 0) { persentase = 0.00; }
+            else if (jam === 1) { persentase = 0.30; }
+            else if (jam === 2) { persentase = 0.32; }
+            else if (jam === 3) { persentase = 0.34; }
+            else if (jam === 4) { persentase = 0.36; }
+            else { persentase = 0.38; }
+
+            var gajiLembur = gajiPokok * persentase;
+            var totalPenghasilan = gajiPokok + gajiLembur;
+
+            document.getElementById("res-gol").innerText = "Golongan " + gol;
+            document.getElementById("res-pokok").innerText = "Rp " + gajiPokok.toLocaleString('id-ID');
+            document.getElementById("res-jam").innerText = jam + " Jam";
+            document.getElementById("res-persen").innerText = (persentase * 100) + "%";
+            document.getElementById("res-lembur").innerText = "Rp " + gajiLembur.toLocaleString('id-ID');
+            document.getElementById("res-total").innerText = "Rp " + totalPenghasilan.toLocaleString('id-ID');
+        }
+
+        function resetFormulir() {
+            document.getElementById("golongan").value = "";
+            document.getElementById("jamLembur").value = "";
+
+            document.getElementById("res-gol").innerText = "-";
+            document.getElementById("res-pokok").innerText = "Rp 0";
+            document.getElementById("res-jam").innerText = "-";
+            document.getElementById("res-persen").innerText = "0%";
+            document.getElementById("res-lembur").innerText = "Rp 0";
+            document.getElementById("res-total").innerText = "Rp 0";
+        }
+    </script>
+</body>
+</html>
